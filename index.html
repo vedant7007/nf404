@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x274C;</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; color: #333; min-height: 100vh; }
+
+        /* 404 Page Styles */
+        .error-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        .error-page h1 { font-size: 120px; color: #ddd; font-weight: 900; line-height: 1; cursor: default; user-select: none; }
+        .error-page p { color: #999; font-size: 18px; margin-top: 10px; }
+        .error-page .sub { color: #bbb; font-size: 14px; margin-top: 5px; }
+
+        /* Hidden Content */
+        .content { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+        .content.active { display: block; }
+        .error-page.hidden { display: none; }
+
+        /* Nav */
+        .nav {
+            position: sticky; top: 0; background: #1a1a2e; padding: 12px 20px;
+            display: flex; flex-wrap: wrap; gap: 8px; z-index: 100; border-radius: 0 0 8px 8px;
+        }
+        .nav button {
+            background: #16213e; border: 1px solid #0f3460; color: #e94560;
+            padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;
+            transition: all 0.2s;
+        }
+        .nav button:hover, .nav button.active { background: #e94560; color: #fff; border-color: #e94560; }
+        .nav .exit-btn { margin-left: auto; background: #333; border-color: #555; color: #aaa; }
+        .nav .exit-btn:hover { background: #555; color: #fff; }
+
+        /* Code blocks */
+        .program { display: none; }
+        .program.active { display: block; }
+        .program h2 { color: #e94560; font-size: 16px; padding: 15px 0 10px; font-weight: 600; }
+        pre {
+            background: #0d1117; color: #c9d1d9; padding: 16px; border-radius: 6px;
+            overflow-x: auto; font-size: 13px; line-height: 1.5; border: 1px solid #30363d;
+        }
+        .keyword { color: #ff7b72; }
+        .type { color: #79c0ff; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .func { color: #d2a8ff; }
+        .number { color: #79c0ff; }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .error-page h1 { font-size: 80px; }
+            .nav { gap: 4px; padding: 8px 10px; }
+            .nav button { font-size: 10px; padding: 5px 8px; }
+            pre { font-size: 11px; padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-page" id="errorPage">
+        <h1 id="trigger">404</h1>
+        <p>Page Not Found</p>
+        <p class="sub">The requested URL was not found on this server.</p>
+    </div>
+
+    <div class="content" id="content">
+        <div class="nav" id="nav">
+            <button onclick="show(0)" class="active">FCFS</button>
+            <button onclick="show(1)">SJF</button>
+            <button onclick="show(2)">Priority</button>
+            <button onclick="show(3)">Round Robin</button>
+            <button onclick="show(4)">Producer Consumer</button>
+            <button onclick="show(5)">First Fit</button>
+            <button onclick="show(6)">Best Fit</button>
+            <button onclick="show(7)">Worst Fit</button>
+            <button onclick="show(8)">Paging</button>
+            <button onclick="show(9)">FIFO Page</button>
+            <button onclick="show(10)">Optimal Page</button>
+            <button onclick="show(11)">LRU Page</button>
+            <button class="exit-btn" onclick="hide()">X</button>
+        </div>
+
+        <div class="program active" id="p0">
+            <h2>1. FCFS (First Come First Serve) Scheduling</h2>
+            <pre><span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> n,bt[<span class="number">20</span>],wt[<span class="number">20</span>],tat[<span class="number">20</span>],avwt=<span class="number">0</span>,avtat=<span class="number">0</span>,i,j;
+ <span class="func">printf</span>(<span class="string">"Enter total number of processes(maximum 20):"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;n);
+ <span class="func">printf</span>(<span class="string">"\nEnter Process Burst Time\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ <span class="func">printf</span>(<span class="string">"P[%d]:"</span>,i+<span class="number">1</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;bt[i]);
+ }
+ wt[<span class="number">0</span>]=<span class="number">0</span>; <span class="comment">//waiting time for first process is 0</span>
+ <span class="comment">//calculating waiting time</span>
+ <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;n;i++)
+ {
+ wt[i]=<span class="number">0</span>;
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)
+ wt[i]+=bt[j];
+ }
+ <span class="func">printf</span>(<span class="string">"\nProcess\t\tBurst Time\tWaiting Time\tTurnaround Time"</span>);
+ <span class="comment">//calculating turnaround time</span>
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ tat[i]=bt[i]+wt[i];
+ avwt+=wt[i];
+ avtat+=tat[i];
+ <span class="func">printf</span>(<span class="string">"\nP[%d]\t\t%d\t\t%d\t\t%d"</span>,i+<span class="number">1</span>,bt[i],wt[i],tat[i]);
+ }
+ avwt/=i;
+ avtat/=i;
+ <span class="func">printf</span>(<span class="string">"\n\nAverage Waiting Time:%d"</span>,avwt);
+ <span class="func">printf</span>(<span class="string">"\nAverage Turnaround Time:%d"</span>,avtat);
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p1">
+            <h2>2. SJF (Shortest Job First) Scheduling</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">void</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> bt[<span class="number">20</span>],p[<span class="number">20</span>],wt[<span class="number">20</span>],tat[<span class="number">20</span>],i,j,n,total=<span class="number">0</span>,pos,temp;
+ <span class="type">float</span> avg_wt,avg_tat;
+ <span class="func">printf</span>(<span class="string">"Enter number of process:"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;n);
+ <span class="func">printf</span>(<span class="string">"\nEnter Burst Time:\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ <span class="func">printf</span>(<span class="string">"p%d:"</span>,i+<span class="number">1</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;bt[i]);
+ p[i]=i+<span class="number">1</span>;
+ }
+ <span class="comment">//sorting burst time in ascending order using selection sort</span>
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ pos=i;
+ <span class="keyword">for</span>(j=i+<span class="number">1</span>;j&lt;n;j++)
+ {
+ <span class="keyword">if</span>(bt[j]&lt;bt[pos])
+ pos=j;
+ }
+ temp=bt[i];
+ bt[i]=bt[pos];
+ bt[pos]=temp;
+ temp=p[i];
+ p[i]=p[pos];
+ p[pos]=temp;
+ }
+ wt[<span class="number">0</span>]=<span class="number">0</span>;
+ <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;n;i++)
+ {
+ wt[i]=<span class="number">0</span>;
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)
+ wt[i]+=bt[j];
+ total+=wt[i];
+ }
+ avg_wt=(<span class="type">float</span>)total/n;
+ total=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\nProcess\t Burst Time \tWaiting Time\tTurnaround Time"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ tat[i]=bt[i]+wt[i];
+ total+=tat[i];
+ <span class="func">printf</span>(<span class="string">"\np%d\t\t %d\t\t %d\t\t\t%d"</span>,p[i],bt[i],wt[i],tat[i]);
+ }
+ avg_tat=(<span class="type">float</span>)total/n;
+ <span class="func">printf</span>(<span class="string">"\n\nAverage Waiting Time=%f"</span>,avg_wt);
+ <span class="func">printf</span>(<span class="string">"\nAverage Turnaround Time=%f\n"</span>,avg_tat);
+}</pre>
+        </div>
+
+        <div class="program" id="p2">
+            <h2>3. Priority Scheduling</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> bt[<span class="number">20</span>],p[<span class="number">20</span>],wt[<span class="number">20</span>],tat[<span class="number">20</span>],pr[<span class="number">20</span>],i,j,n,total=<span class="number">0</span>,pos,temp,avg_wt,avg_tat;
+ <span class="func">printf</span>(<span class="string">"Enter Total Number of Process:"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;n);
+ <span class="func">printf</span>(<span class="string">"\nEnter Burst Time and Priority\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ <span class="func">printf</span>(<span class="string">"\nP[%d]\n"</span>,i+<span class="number">1</span>);
+ <span class="func">printf</span>(<span class="string">"Burst Time:"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;bt[i]);
+ <span class="func">printf</span>(<span class="string">"Priority:"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;pr[i]);
+ p[i]=i+<span class="number">1</span>;
+ }
+ <span class="comment">//sorting by priority ascending</span>
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ pos=i;
+ <span class="keyword">for</span>(j=i+<span class="number">1</span>;j&lt;n;j++)
+ {
+ <span class="keyword">if</span>(pr[j]&lt;pr[pos])
+ pos=j;
+ }
+ temp=pr[i]; pr[i]=pr[pos]; pr[pos]=temp;
+ temp=bt[i]; bt[i]=bt[pos]; bt[pos]=temp;
+ temp=p[i]; p[i]=p[pos]; p[pos]=temp;
+ }
+ wt[<span class="number">0</span>]=<span class="number">0</span>;
+ <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;n;i++)
+ {
+ wt[i]=<span class="number">0</span>;
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)
+ wt[i]+=bt[j];
+ total+=wt[i];
+ }
+ avg_wt=total/n;
+ total=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\nProcess\t Burst Time \tWaiting Time\tTurnaround Time"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)
+ {
+ tat[i]=bt[i]+wt[i];
+ total+=tat[i];
+ <span class="func">printf</span>(<span class="string">"\nP[%d]\t\t %d\t\t %d\t\t\t%d"</span>,p[i],bt[i],wt[i],tat[i]);
+ }
+ avg_tat=total/n;
+ <span class="func">printf</span>(<span class="string">"\n\nAverage Waiting Time=%d"</span>,avg_wt);
+ <span class="func">printf</span>(<span class="string">"\nAverage Turnaround Time=%d\n"</span>,avg_tat);
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p3">
+            <h2>4. Round Robin Scheduling</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> count,j,n,time,remain,flag=<span class="number">0</span>,time_quantum;
+ <span class="type">int</span> wait_time=<span class="number">0</span>,turnaround_time=<span class="number">0</span>,at[<span class="number">10</span>],bt[<span class="number">10</span>],rt[<span class="number">10</span>];
+ <span class="func">printf</span>(<span class="string">"Enter Total Process:\t "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;n);
+ remain=n;
+ <span class="keyword">for</span>(count=<span class="number">0</span>;count&lt;n;count++)
+ {
+ <span class="func">printf</span>(<span class="string">"Enter Arrival Time and Burst Time for Process %d: "</span>,count+<span class="number">1</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;at[count]);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;bt[count]);
+ rt[count]=bt[count];
+ }
+ <span class="func">printf</span>(<span class="string">"Enter Time Quantum:\t"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;time_quantum);
+ <span class="func">printf</span>(<span class="string">"\n\nProcess\t|TurnaroundTime|Waiting Time\n\n"</span>);
+ <span class="keyword">for</span>(time=<span class="number">0</span>,count=<span class="number">0</span>;remain!=<span class="number">0</span>;)
+ {
+ <span class="keyword">if</span>(rt[count]&lt;=time_quantum &amp;&amp; rt[count]&gt;<span class="number">0</span>)
+ {
+ time+=rt[count];
+ rt[count]=<span class="number">0</span>;
+ flag=<span class="number">1</span>;
+ }
+ <span class="keyword">else if</span>(rt[count]&gt;<span class="number">0</span>)
+ {
+ rt[count]-=time_quantum;
+ time+=time_quantum;
+ }
+ <span class="keyword">if</span>(rt[count]==<span class="number">0</span> &amp;&amp; flag==<span class="number">1</span>)
+ {
+ remain--;
+ <span class="func">printf</span>(<span class="string">"P[%d]\t|\t%d\t|\t%d\n"</span>,count+<span class="number">1</span>,time-at[count],time-at[count]-bt[count]);
+ wait_time+=time-at[count]-bt[count];
+ turnaround_time+=time-at[count];
+ flag=<span class="number">0</span>;
+ }
+ <span class="keyword">if</span>(count==n-<span class="number">1</span>) count=<span class="number">0</span>;
+ <span class="keyword">else if</span>(at[count+<span class="number">1</span>]&lt;=time) count++;
+ <span class="keyword">else</span> count=<span class="number">0</span>;
+ }
+ <span class="func">printf</span>(<span class="string">"\n Average Waiting Time= %f\n"</span>,wait_time*<span class="number">1.0</span>/n);
+ <span class="func">printf</span>(<span class="string">"Avg Turnaround Time = %f"</span>,turnaround_time*<span class="number">1.0</span>/n);
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p4">
+            <h2>5. Producer Consumer Problem</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="keyword">#include</span><span class="string">&lt;stdlib.h&gt;</span>
+<span class="type">int</span> mutex=<span class="number">1</span>, full=<span class="number">0</span>, empty=<span class="number">3</span>, x=<span class="number">0</span>;
+
+<span class="type">int</span> <span class="func">wait</span>(<span class="type">int</span> s) { <span class="keyword">return</span> --s; }
+<span class="type">int</span> <span class="func">signal</span>(<span class="type">int</span> s) { <span class="keyword">return</span> ++s; }
+
+<span class="type">void</span> <span class="func">producer</span>()
+{
+ mutex = <span class="func">wait</span>(mutex);
+ full = <span class="func">signal</span>(full);
+ empty = <span class="func">wait</span>(empty);
+ x++;
+ <span class="func">printf</span>(<span class="string">"\nProducer produces the item %d"</span>,x);
+ mutex = <span class="func">signal</span>(mutex);
+}
+
+<span class="type">void</span> <span class="func">consumer</span>()
+{
+ mutex = <span class="func">wait</span>(mutex);
+ full = <span class="func">wait</span>(full);
+ empty = <span class="func">signal</span>(empty);
+ <span class="func">printf</span>(<span class="string">"\nConsumer consumes item %d"</span>,x);
+ x--;
+ mutex = <span class="func">signal</span>(mutex);
+}
+
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> n;
+ <span class="func">printf</span>(<span class="string">"\n1.Producer\n2.Consumer\n3.Exit"</span>);
+ <span class="keyword">while</span>(<span class="number">1</span>)
+ {
+ <span class="func">printf</span>(<span class="string">"\nEnter your choice:"</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;n);
+ <span class="keyword">switch</span>(n)
+ {
+ <span class="keyword">case</span> <span class="number">1</span>:
+  <span class="keyword">if</span>(mutex==<span class="number">1</span> &amp;&amp; empty!=<span class="number">0</span>) <span class="func">producer</span>();
+  <span class="keyword">else</span> <span class="func">printf</span>(<span class="string">"Buffer is full!!"</span>);
+  <span class="keyword">break</span>;
+ <span class="keyword">case</span> <span class="number">2</span>:
+  <span class="keyword">if</span>(mutex==<span class="number">1</span> &amp;&amp; full!=<span class="number">0</span>) <span class="func">consumer</span>();
+  <span class="keyword">else</span> <span class="func">printf</span>(<span class="string">"Buffer is empty!!"</span>);
+  <span class="keyword">break</span>;
+ <span class="keyword">case</span> <span class="number">3</span>:
+  <span class="func">exit</span>(<span class="number">0</span>);
+  <span class="keyword">break</span>;
+ }
+ }
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p5">
+            <h2>6. Memory Allocation - First Fit</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">void</span> <span class="func">firstFit</span>(<span class="type">int</span> blockSize[], <span class="type">int</span> m, <span class="type">int</span> processSize[], <span class="type">int</span> n)
+{
+ <span class="type">int</span> i, j;
+ <span class="type">int</span> allocation[n];
+ <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n; i++)
+ allocation[i] = -<span class="number">1</span>;
+
+ <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++)
+ {
+ <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; m; j++)
+ {
+ <span class="keyword">if</span> (blockSize[j] &gt;= processSize[i])
+ {
+ allocation[i] = j;
+ blockSize[j] -= processSize[i];
+ <span class="keyword">break</span>;
+ }
+ }
+ }
+ <span class="func">printf</span>(<span class="string">"\nProcess No.\tProcess Size\tBlock no.\n"</span>);
+ <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n; i++)
+ {
+ <span class="func">printf</span>(<span class="string">" %i\t\t\t%i\t\t\t\t"</span>, i+<span class="number">1</span>, processSize[i]);
+ <span class="keyword">if</span> (allocation[i] != -<span class="number">1</span>)
+ <span class="func">printf</span>(<span class="string">"%i"</span>, allocation[i] + <span class="number">1</span>);
+ <span class="keyword">else</span>
+ <span class="func">printf</span>(<span class="string">"Not Allocated"</span>);
+ <span class="func">printf</span>(<span class="string">"\n"</span>);
+ }
+}
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> blockSize[] = {<span class="number">100</span>, <span class="number">500</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">600</span>};
+ <span class="type">int</span> processSize[] = {<span class="number">212</span>, <span class="number">417</span>, <span class="number">112</span>, <span class="number">426</span>};
+ <span class="type">int</span> m = <span class="keyword">sizeof</span>(blockSize) / <span class="keyword">sizeof</span>(blockSize[<span class="number">0</span>]);
+ <span class="type">int</span> n = <span class="keyword">sizeof</span>(processSize) / <span class="keyword">sizeof</span>(processSize[<span class="number">0</span>]);
+ <span class="func">firstFit</span>(blockSize, m, processSize, n);
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p6">
+            <h2>7. Memory Allocation - Best Fit</h2>
+            <pre><span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="type">void</span> <span class="func">implimentBestFit</span>(<span class="type">int</span> blockSize[], <span class="type">int</span> blocks,
+ <span class="type">int</span> processSize[], <span class="type">int</span> proccesses)
+{
+ <span class="type">int</span> allocation[proccesses];
+ <span class="type">int</span> occupied[blocks];
+ <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; proccesses; i++)
+ allocation[i] = -<span class="number">1</span>;
+ <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; blocks; i++)
+ occupied[i] = <span class="number">0</span>;
+
+ <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; proccesses; i++)
+ {
+ <span class="type">int</span> indexPlaced = -<span class="number">1</span>;
+ <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; blocks; j++) {
+ <span class="keyword">if</span> (blockSize[j] &gt;= processSize[i] &amp;&amp; !occupied[j])
+ {
+ <span class="keyword">if</span> (indexPlaced == -<span class="number">1</span>)
+  indexPlaced = j;
+ <span class="keyword">else if</span> (blockSize[j] &lt; blockSize[indexPlaced])
+  indexPlaced = j;
+ }
+ }
+ <span class="keyword">if</span> (indexPlaced != -<span class="number">1</span>)
+ {
+ allocation[i] = indexPlaced;
+ occupied[indexPlaced] = <span class="number">1</span>;
+ }
+ }
+ <span class="func">printf</span>(<span class="string">"\nProcess No.\tProcess Size\tBlock no.\n"</span>);
+ <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; proccesses; i++)
+ {
+ <span class="func">printf</span>(<span class="string">"%d \t\t\t %d \t\t\t"</span>, i+<span class="number">1</span>, processSize[i]);
+ <span class="keyword">if</span> (allocation[i] != -<span class="number">1</span>)
+ <span class="func">printf</span>(<span class="string">"%d\n"</span>,allocation[i] + <span class="number">1</span>);
+ <span class="keyword">else</span>
+ <span class="func">printf</span>(<span class="string">"Not Allocated\n"</span>);
+ }
+}
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> blockSize[] = {<span class="number">100</span>, <span class="number">50</span>, <span class="number">30</span>, <span class="number">120</span>, <span class="number">35</span>};
+ <span class="type">int</span> processSize[] = {<span class="number">40</span>, <span class="number">10</span>, <span class="number">30</span>, <span class="number">60</span>};
+ <span class="type">int</span> blocks = <span class="keyword">sizeof</span>(blockSize)/<span class="keyword">sizeof</span>(blockSize[<span class="number">0</span>]);
+ <span class="type">int</span> proccesses = <span class="keyword">sizeof</span>(processSize)/<span class="keyword">sizeof</span>(processSize[<span class="number">0</span>]);
+ <span class="func">implimentBestFit</span>(blockSize, blocks, processSize, proccesses);
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p7">
+            <h2>8. Memory Allocation - Worst Fit</h2>
+            <pre><span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="type">void</span> <span class="func">implimentWorstFit</span>(<span class="type">int</span> blockSize[], <span class="type">int</span> blocks,
+ <span class="type">int</span> processSize[], <span class="type">int</span> processes)
+{
+ <span class="type">int</span> allocation[processes], i;
+ <span class="type">int</span> occupied[blocks];
+ <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; processes; i++)
+ allocation[i] = -<span class="number">1</span>;
+ <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; blocks; i++)
+ occupied[i] = <span class="number">0</span>;
+
+ <span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; processes; i++)
+ {
+ <span class="type">int</span> indexPlaced = -<span class="number">1</span>, j;
+ <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; blocks; j++)
+ {
+ <span class="keyword">if</span>(blockSize[j] &gt;= processSize[i] &amp;&amp; !occupied[j])
+ {
+ <span class="keyword">if</span> (indexPlaced == -<span class="number">1</span>)
+  indexPlaced = j;
+ <span class="keyword">else if</span> (blockSize[indexPlaced] &lt; blockSize[j])
+  indexPlaced = j;
+ }
+ }
+ <span class="keyword">if</span> (indexPlaced != -<span class="number">1</span>)
+ {
+ allocation[i] = indexPlaced;
+ occupied[indexPlaced] = <span class="number">1</span>;
+ blockSize[indexPlaced] -= processSize[i];
+ }
+ }
+ <span class="func">printf</span>(<span class="string">"\nProcess No.\tProcess Size\tBlock no.\n"</span>);
+ <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; processes; i++)
+ {
+ <span class="func">printf</span>(<span class="string">"%d \t\t\t %d \t\t\t"</span>, i+<span class="number">1</span>, processSize[i]);
+ <span class="keyword">if</span> (allocation[i] != -<span class="number">1</span>)
+ <span class="func">printf</span>(<span class="string">"%d\n"</span>,allocation[i] + <span class="number">1</span>);
+ <span class="keyword">else</span>
+ <span class="func">printf</span>(<span class="string">"Not Allocated\n"</span>);
+ }
+}
+<span class="type">int</span> <span class="func">main</span>()
+{
+ <span class="type">int</span> blockSize[] = {<span class="number">100</span>, <span class="number">50</span>, <span class="number">30</span>, <span class="number">120</span>, <span class="number">35</span>};
+ <span class="type">int</span> processSize[] = {<span class="number">40</span>, <span class="number">10</span>, <span class="number">30</span>, <span class="number">60</span>};
+ <span class="type">int</span> blocks = <span class="keyword">sizeof</span>(blockSize)/<span class="keyword">sizeof</span>(blockSize[<span class="number">0</span>]);
+ <span class="type">int</span> processes = <span class="keyword">sizeof</span>(processSize)/<span class="keyword">sizeof</span>(processSize[<span class="number">0</span>]);
+ <span class="func">implimentWorstFit</span>(blockSize, blocks, processSize, processes);
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p8">
+            <h2>9. Paging Technique of Memory Management</h2>
+            <pre><span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="keyword">struct</span> pstruct
+{
+    <span class="type">int</span> fno;
+    <span class="type">int</span> pbit;
+} ptable[<span class="number">10</span>];
+
+<span class="type">int</span> pmsize,lmsize,psize,frame,page,ftable[<span class="number">20</span>],frameno;
+
+<span class="type">void</span> <span class="func">info</span>()
+{
+    <span class="func">printf</span>(<span class="string">"\n\nMEMORY MANAGEMENT USING PAGING\n\n"</span>);
+    <span class="func">printf</span>(<span class="string">"Enter the Size of Physical memory: "</span>);
+    <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;pmsize);
+    <span class="func">printf</span>(<span class="string">"Enter the size of Logical memory: "</span>);
+    <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;lmsize);
+    <span class="func">printf</span>(<span class="string">"Enter the partition size: "</span>);
+    <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;psize);
+    frame = (<span class="type">int</span>) pmsize/psize;
+    page = (<span class="type">int</span>) lmsize/psize;
+    <span class="func">printf</span>(<span class="string">"The physical memory is divided into %d frames\n"</span>,frame);
+    <span class="func">printf</span>(<span class="string">"The Logical memory is divided into %d pages"</span>,page);
+}
+
+<span class="type">void</span> <span class="func">assign</span>()
+{
+    <span class="type">int</span> i;
+    <span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;page;i++)
+    { ptable[i].fno = -<span class="number">1</span>; ptable[i].pbit= -<span class="number">1</span>; }
+    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;frame;i++)
+        ftable[i] = <span class="number">32555</span>;
+    <span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;page;i++)
+    {
+        <span class="func">printf</span>(<span class="string">"Enter Frame number for page %d: "</span>,i);
+        <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;frameno);
+        ftable[frameno] = i;
+        <span class="keyword">if</span>(ptable[i].pbit == -<span class="number">1</span>)
+        { ptable[i].fno = frameno; ptable[i].pbit = <span class="number">1</span>; }
+    }
+    <span class="func">printf</span>(<span class="string">"\n\nPAGE TABLE\n"</span>);
+    <span class="func">printf</span>(<span class="string">"PageAddr\tFrameNo.\tPresenceBit\n"</span>);
+    <span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;page;i++)
+        <span class="func">printf</span>(<span class="string">"%d\t\t%d\t\t%d\n"</span>,i,ptable[i].fno,ptable[i].pbit);
+    <span class="func">printf</span>(<span class="string">"\nFRAME TABLE\n"</span>);
+    <span class="func">printf</span>(<span class="string">"FrameAddr\tPageNo\n"</span>);
+    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;frame;i++)
+        <span class="func">printf</span>(<span class="string">"%d\t\t%d\n"</span>,i,ftable[i]);
+}
+
+<span class="type">void</span> <span class="func">cphyaddr</span>()
+{
+    <span class="type">int</span> laddr,paddr,disp,phyaddr,baddr;
+    <span class="func">printf</span>(<span class="string">"\nEnter the Base Address: "</span>);
+    <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;baddr);
+    <span class="func">printf</span>(<span class="string">"Enter the Logical Address: "</span>);
+    <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;laddr);
+    paddr = laddr / psize;
+    disp = laddr % psize;
+    <span class="keyword">if</span>(ptable[paddr].pbit == <span class="number">1</span>)
+        phyaddr = baddr + (ptable[paddr].fno*psize) + disp;
+    <span class="func">printf</span>(<span class="string">"Physical Address: %d"</span>,phyaddr);
+}
+
+<span class="type">int</span> <span class="func">main</span>()
+{
+    <span class="func">info</span>();
+    <span class="func">assign</span>();
+    <span class="func">cphyaddr</span>();
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p9">
+            <h2>10. FIFO Page Replacement Algorithm</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">int</span> i,j,nof,nor,flag=<span class="number">0</span>,ref[<span class="number">50</span>],frm[<span class="number">50</span>],pf=<span class="number">0</span>,victim=-<span class="number">1</span>;
+<span class="type">void</span> <span class="func">main</span>()
+{
+ <span class="func">printf</span>(<span class="string">"\n\tFIFO PAGE REPLACEMENT ALGORITHM"</span>);
+ <span class="func">printf</span>(<span class="string">"\n Enter no.of frames: "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;nof);
+ <span class="func">printf</span>(<span class="string">"Enter number of reference string: "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;nor);
+ <span class="func">printf</span>(<span class="string">"Enter the reference string: "</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;ref[i]);
+ <span class="func">printf</span>(<span class="string">"\nThe given reference string:"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ <span class="func">printf</span>(<span class="string">"%4d"</span>,ref[i]);
+ <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=nof;i++)
+ frm[i]=-<span class="number">1</span>;
+ <span class="func">printf</span>(<span class="string">"\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ {
+ flag=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\n\t Reference np%d-&gt;\t"</span>,ref[i]);
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;nof;j++)
+ {
+ <span class="keyword">if</span>(frm[j]==ref[i])
+ { flag=<span class="number">1</span>; <span class="keyword">break</span>; }
+ }
+ <span class="keyword">if</span>(flag==<span class="number">0</span>)
+ {
+ pf++;
+ victim++;
+ victim=victim%nof;
+ frm[victim]=ref[i];
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;nof;j++)
+ <span class="func">printf</span>(<span class="string">"%4d"</span>,frm[j]);
+ }
+ }
+ <span class="func">printf</span>(<span class="string">"\n\n\t No.of pages faults: %d"</span>,pf);
+}</pre>
+        </div>
+
+        <div class="program" id="p10">
+            <h2>11. Optimal Page Replacement Algorithm</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">int</span> i,j,nof,nor,flag=<span class="number">0</span>,ref[<span class="number">50</span>],frm[<span class="number">50</span>],pf=<span class="number">0</span>,victim=-<span class="number">1</span>;
+<span class="type">int</span> recent[<span class="number">10</span>],optcal[<span class="number">50</span>],count=<span class="number">0</span>;
+<span class="type">int</span> <span class="func">optvictim</span>();
+
+<span class="type">void</span> <span class="func">main</span>()
+{
+ <span class="func">printf</span>(<span class="string">"\n OPTIMAL PAGE REPLACEMENT ALGORITHM"</span>);
+ <span class="func">printf</span>(<span class="string">"\nEnter the no.of frames: "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;nof);
+ <span class="func">printf</span>(<span class="string">"Enter the no.of reference string: "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;nor);
+ <span class="func">printf</span>(<span class="string">"Enter the reference string: "</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;ref[i]);
+ <span class="func">printf</span>(<span class="string">"\nThe given string:\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ <span class="func">printf</span>(<span class="string">"%4d"</span>,ref[i]);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nof;i++)
+ { frm[i]=-<span class="number">1</span>; optcal[i]=<span class="number">0</span>; }
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)
+ recent[i]=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ {
+ flag=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\n\tref no %d -&gt;\t"</span>,ref[i]);
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;nof;j++)
+ {
+ <span class="keyword">if</span>(frm[j]==ref[i])
+ { flag=<span class="number">1</span>; <span class="keyword">break</span>; }
+ }
+ <span class="keyword">if</span>(flag==<span class="number">0</span>)
+ {
+ count++;
+ <span class="keyword">if</span>(count&lt;=nof) victim++;
+ <span class="keyword">else</span> victim=<span class="func">optvictim</span>(i);
+ pf++;
+ frm[victim]=ref[i];
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;nof;j++)
+ <span class="func">printf</span>(<span class="string">"%4d"</span>,frm[j]);
+ }
+ }
+ <span class="func">printf</span>(<span class="string">"\n Number of page faults: %d"</span>,pf);
+}
+
+<span class="type">int</span> <span class="func">optvictim</span>(<span class="type">int</span> index)
+{
+ <span class="type">int</span> i,j,temp,notfound;
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nof;i++)
+ {
+ notfound=<span class="number">1</span>;
+ <span class="keyword">for</span>(j=index;j&lt;nor;j++)
+ <span class="keyword">if</span>(frm[i]==ref[j])
+ { notfound=<span class="number">0</span>; optcal[i]=j; <span class="keyword">break</span>; }
+ <span class="keyword">if</span>(notfound==<span class="number">1</span>) <span class="keyword">return</span> i;
+ }
+ temp=optcal[<span class="number">0</span>];
+ <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;nof;i++)
+ <span class="keyword">if</span>(temp&lt;optcal[i]) temp=optcal[i];
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nof;i++)
+ <span class="keyword">if</span>(frm[temp]==frm[i]) <span class="keyword">return</span> i;
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+
+        <div class="program" id="p11">
+            <h2>12. LRU Page Replacement Algorithm</h2>
+            <pre><span class="keyword">#include</span><span class="string">&lt;stdio.h&gt;</span>
+<span class="type">int</span> i,j,nof,nor,flag=<span class="number">0</span>,ref[<span class="number">50</span>],frm[<span class="number">50</span>],pf=<span class="number">0</span>,victim=-<span class="number">1</span>;
+<span class="type">int</span> recent[<span class="number">10</span>],lrucal[<span class="number">50</span>],count=<span class="number">0</span>;
+<span class="type">int</span> <span class="func">lruvictim</span>();
+
+<span class="type">void</span> <span class="func">main</span>()
+{
+ <span class="func">printf</span>(<span class="string">"\n\t LRU PAGE REPLACEMENT ALGORITHM"</span>);
+ <span class="func">printf</span>(<span class="string">"\n Enter no.of Frames: "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;nof);
+ <span class="func">printf</span>(<span class="string">" Enter no.of reference string: "</span>);
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;nor);
+ <span class="func">printf</span>(<span class="string">"Enter reference string: "</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ <span class="func">scanf</span>(<span class="string">"%d"</span>,&amp;ref[i]);
+ <span class="func">printf</span>(<span class="string">"\n\t LRU PAGE REPLACEMENT ALGORITHM"</span>);
+ <span class="func">printf</span>(<span class="string">"\n\t The given reference string:"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ <span class="func">printf</span>(<span class="string">"%4d"</span>,ref[i]);
+ <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=nof;i++)
+ { frm[i]=-<span class="number">1</span>; lrucal[i]=<span class="number">0</span>; }
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)
+ recent[i]=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\n"</span>);
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nor;i++)
+ {
+ flag=<span class="number">0</span>;
+ <span class="func">printf</span>(<span class="string">"\n\t Reference NO %d-&gt;\t"</span>,ref[i]);
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;nof;j++)
+ {
+ <span class="keyword">if</span>(frm[j]==ref[i])
+ { flag=<span class="number">1</span>; <span class="keyword">break</span>; }
+ }
+ <span class="keyword">if</span>(flag==<span class="number">0</span>)
+ {
+ count++;
+ <span class="keyword">if</span>(count&lt;=nof) victim++;
+ <span class="keyword">else</span> victim=<span class="func">lruvictim</span>();
+ pf++;
+ frm[victim]=ref[i];
+ <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;nof;j++)
+ <span class="func">printf</span>(<span class="string">"%4d"</span>,frm[j]);
+ }
+ recent[ref[i]]=i;
+ }
+ <span class="func">printf</span>(<span class="string">"\n\n\t No.of page faults: %d"</span>,pf);
+}
+
+<span class="type">int</span> <span class="func">lruvictim</span>()
+{
+ <span class="type">int</span> i,j,temp1,temp2;
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nof;i++)
+ {
+ temp1=frm[i];
+ lrucal[i]=recent[temp1];
+ }
+ temp2=lrucal[<span class="number">0</span>];
+ <span class="keyword">for</span>(j=<span class="number">1</span>;j&lt;nof;j++)
+ {
+ <span class="keyword">if</span>(temp2&gt;lrucal[j])
+ temp2=lrucal[j];
+ }
+ <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;nof;i++)
+ <span class="keyword">if</span>(ref[temp2]==frm[i])
+ <span class="keyword">return</span> i;
+ <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        let clicks = 0;
+        let timer = null;
+        const trigger = document.getElementById('trigger');
+        const errorPage = document.getElementById('errorPage');
+        const content = document.getElementById('content');
+
+        // Secret: triple-click the 404 OR press ` (backtick) key
+        trigger.addEventListener('click', () => {
+            clicks++;
+            clearTimeout(timer);
+            timer = setTimeout(() => clicks = 0, 600);
+            if (clicks >= 3) { reveal(); clicks = 0; }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '`' || e.key === '~') {
+                if (content.classList.contains('active')) hide();
+                else reveal();
+            }
+        });
+
+        function reveal() {
+            errorPage.classList.add('hidden');
+            content.classList.add('active');
+        }
+
+        function hide() {
+            content.classList.remove('active');
+            errorPage.classList.remove('hidden');
+        }
+
+        function show(idx) {
+            document.querySelectorAll('.program').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav button:not(.exit-btn)').forEach(b => b.classList.remove('active'));
+            document.getElementById('p' + idx).classList.add('active');
+            document.querySelectorAll('.nav button')[idx].classList.add('active');
+        }
+    </script>
+</body>
+</html>
