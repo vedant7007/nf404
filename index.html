@@ -764,7 +764,7 @@
 
         let holdTimer = null;
         trigger.addEventListener('touchstart', (e) => {
-            holdTimer = setTimeout(() => { reveal(); }, 1000);
+            holdTimer = setTimeout(() => { reveal(); }, 2500);
         });
         trigger.addEventListener('touchend', () => clearTimeout(holdTimer));
         trigger.addEventListener('touchmove', () => clearTimeout(holdTimer));
