@@ -88,7 +88,7 @@
             <button onclick="show(9)">FIFO Page</button>
             <button onclick="show(10)">Optimal Page</button>
             <button onclick="show(11)">LRU Page</button>
-            <button class="exit-btn" onclick="hide()">X</button>
+            <button class="exit-btn" onclick="hide()">$</button>
         </div>
 
         <div class="program active" id="p0">
@@ -771,7 +771,7 @@
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === '`' || e.key === '~') {
+            if (e.key === '$') {
                 if (content.classList.contains('active')) hide();
                 else reveal();
             }
