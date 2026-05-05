@@ -762,7 +762,13 @@
         const errorPage = document.getElementById('errorPage');
         const content = document.getElementById('content');
 
-        // Secret: triple-click the 404 OR press ` (backtick) key
+        let holdTimer = null;
+        trigger.addEventListener('touchstart', (e) => {
+            holdTimer = setTimeout(() => { reveal(); }, 1000);
+        });
+        trigger.addEventListener('touchend', () => clearTimeout(holdTimer));
+        trigger.addEventListener('touchmove', () => clearTimeout(holdTimer));
+
         trigger.addEventListener('click', () => {
             clicks++;
             clearTimeout(timer);
